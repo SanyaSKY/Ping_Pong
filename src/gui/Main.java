@@ -12,12 +12,11 @@ public class Main {
 		// TODO Auto-generated method stub
 		Display display = new Display();
 		Shell shell = new Shell(display);
-		shell.setText("Ping pong");
+		shell.setText("Ping_pong");
 		shell.setSize(505, 325);
-		Image bg_Image = new Image(display, "/home/sanyasky/workspace/Ping pong/src/gui/table-tennis-new.png");
+		Image bg_Image = new Image(display,Main.class.getResourceAsStream("table-tennis-new.png"));
 		shell.setBackgroundImage(bg_Image);
 		shell.setBackgroundMode(SWT.INHERIT_FORCE);
-		// shell.setFullScreen(true);
 		shell.setLayout(new FillLayout());
 
 		try {
