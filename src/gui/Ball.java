@@ -11,17 +11,15 @@ import org.eclipse.swt.widgets.*;
 
 public class Ball {
 	private static final int IMAGE_WIDTH = 10;
-	private static final int TIMER_INTERVAL = 1;
+	private static final int TIMER_INTERVAL = 10;
 
-	private static int x = 0;
-	private static int y = 0;
+	private static int x = 250;
+	private static int y = 150;
 
-	private static int directionX = 3;
-	private static int directionY = 2;
+	private static int directionX = 1;
+	private static int directionY = 1;
 
-	private static Canvas canvas;
-
-	public static void animate() {
+	public static void animate(Canvas canvas) {
 		x += directionX;
 		y += directionY;
 
@@ -41,6 +39,10 @@ public class Ball {
 			y = rect.height - IMAGE_WIDTH;
 			directionY = -1;
 		}
+		if (x == 10 && y >= PaddleLeft.getPos() && y <= (PaddleLeft.getPos() + 40))
+			directionX = 1;
+		if (x == 480 && y >= PaddleRight.getPos() && y <= (PaddleRight.getPos() + 40))
+			directionX = -1;
 
 		// Force a redraw
 		canvas.redraw();
@@ -49,23 +51,61 @@ public class Ball {
 	public static void main(String[] args) {
 		final Display display = new Display();
 		final Shell shell = new Shell(display);
-		shell.setText("Ball");
+		shell.setText("Ping_pong");  
+		shell.setSize(505, 325);
+		Image bg_Image = new Image(display, Ball.class.getResourceAsStream("table-tennis-new.png"));
+		shell.setBackgroundImage(bg_Image);
+		shell.setBackgroundMode(SWT.INHERIT_FORCE);
+		Canvas canvas;
 
+		PaddleLeft Paddleleft = new PaddleLeft();
+		PaddleRight Paddleright = new PaddleRight(y);
 		shell.setLayout(new FillLayout());
 		canvas = new Canvas(shell, SWT.NO_BACKGROUND);
 		canvas.addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent event) {
 				// Draw the background
-				event.gc.fillRectangle(canvas.getBounds());
+				// event.gc.fillRectangle(canvas.getBounds());
 				event.gc.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_BLACK));
 				event.gc.fillOval(x, y, IMAGE_WIDTH, IMAGE_WIDTH);
+				event.gc.setBackground(event.display.getSystemColor(SWT.COLOR_RED));
+				event.gc.fillRectangle(Paddleleft.XPOS, PaddleLeft.getPos(), 5, 40);
+				event.gc.setBackground(event.display.getSystemColor(SWT.COLOR_YELLOW));
+				event.gc.fillRectangle(Paddleright.XPOS, PaddleRight.getPos(), 5, 40);
 			}
 		});
 
+		Listener listener = new Listener() {
+			int up = 16777217, down = 16777218, w = 119, s = 115;
+
+			public void handleEvent(Event e) {
+				if (e.keyCode == s) {
+					PaddleLeft.setPos(PaddleLeft.getPos() + 10);
+					canvas.redraw(); // Force a redraw
+				}
+				if (e.keyCode == w) {
+					PaddleLeft.setPos(PaddleLeft.getPos() - 10);
+					canvas.redraw();// Force a redraw
+				}
+				if (e.keyCode == down) {
+					PaddleRight.setPos(PaddleRight.getPos() + 10);
+					canvas.redraw(); // Force a redraw
+				}
+				if (e.keyCode == up) {
+					PaddleRight.setPos(PaddleRight.getPos() - 10);
+					canvas.redraw();// Force a redraw
+				}
+
+			}
+		};
+		Display.getCurrent().addFilter(SWT.KeyDown, listener);
+
 		shell.open();
+		// shell.addListener(SWT.KeyDown, listener);
+		// shell.addListener(SWT.KeyUp, listener);
 		Runnable runnable = new Runnable() {
 			public void run() {
-				animate();
+				animate(canvas);
 				display.timerExec(TIMER_INTERVAL, this);
 			}
 		};

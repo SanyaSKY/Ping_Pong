@@ -7,8 +7,8 @@ package gui;
  */
 public class PaddleRight {
 
-	private int yPos = 0, score;
-	final int XPOS = 460;
+	private static int yPos = 0, score;
+	final int XPOS = 490;
 
 	// the constructor takes in an integer( which is, in our case,
 	// the y position of the ball)
@@ -18,27 +18,27 @@ public class PaddleRight {
 		setScore(0);
 	}
 
-	public void setPos(int pos) {
-		// same set up as in Paddle left
-		this.yPos = pos;
-		if (yPos > 230) {
-			setPos(230);
+	public static void setPos(int pos) {
+		// same set up as in Paddle left 
+		yPos = pos;
+		if (yPos > 255) {
+			setPos(250);
 		} else if (yPos < 0) {
 			setPos(0);
 		}
 	}
 
-	public int getPos() {
+	public static int getPos() {
 		return yPos;
 	}
 
 	// setters and getters for int score
-	public void setScore(int score) {
-		this.score = score;
+	public static void setScore(int score1) {
+		score = score1;
 	}
 
-	public int getScore() {
-		return this.score;
+	public static int getScore() {
+		return score;
 	}
 
 }

@@ -4,22 +4,22 @@ package gui;
 
 	 */
 public class PaddleLeft {
-	// declaration for variables needed
-	private int yPos = 0;
-	final int XPOS = 30;
+	// declaration for variables needed 
+	private static int yPos = 0;
+	final int XPOS = 5;
 
 	public PaddleLeft() {
 		// sets up the paddle to be at a y position of 120
 		setPos(120);
 	}
 
-	public void setPos(int pos) {
-		this.yPos = pos;
+	public static void setPos(int pos) {
+		yPos = pos;
 		// if the y position upper left hand corner is
-		// 70 pixels of the bottom of the applet window
-		if (yPos > 230) {
+		// 40 pixels of the bottom of the applet window
+		if (yPos > 255) {
 			// set it back to 70 pixels away
-			setPos(230);
+			setPos(255);
 		}
 		// if the y position upper left hand corner is
 		// less than zero(outside the applet window)
@@ -29,7 +29,7 @@ public class PaddleLeft {
 		}
 	}
 
-	public int getPos() {
+	public static int getPos() {
 		return yPos;
 
 	}
