@@ -19,7 +19,7 @@ public class PaddleRight {
 	}
 
 	public static void setPos(int pos) {
-		// same set up as in Paddle left 
+		// same set up as in Paddle left
 		yPos = pos;
 		if (yPos > 255) {
 			setPos(250);

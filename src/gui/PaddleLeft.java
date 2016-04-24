@@ -5,12 +5,13 @@ package gui;
 	 */
 public class PaddleLeft {
 	// declaration for variables needed 
-	private static int yPos = 0;
+	private static int yPos = 0 , score ;
 	final int XPOS = 5;
 
 	public PaddleLeft() {
 		// sets up the paddle to be at a y position of 120
 		setPos(120);
+		setScore(0);
 	}
 
 	public static void setPos(int pos) {
@@ -30,7 +31,15 @@ public class PaddleLeft {
 	}
 
 	public static int getPos() {
-		return yPos;
+		return yPos; 
 
 	}
+	// setters and getters for int score
+		public static void setScore(int score1) {
+			score = score1;
+		}
+
+		public static int getScore() {
+			return score;
+		}
 }
