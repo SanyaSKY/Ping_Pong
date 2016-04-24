@@ -81,7 +81,6 @@ public class Ball {
 		canvas.addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent event) {
 				// Draw the background
-				// event.gc.fillRectangle(canvas.getBounds());
 				event.gc.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_BLACK));
 				event.gc.fillOval(x, y, IMAGE_WIDTH, IMAGE_WIDTH);
 				event.gc.setBackground(event.display.getSystemColor(SWT.COLOR_RED));
@@ -117,11 +116,8 @@ public class Ball {
 					PaddleRight.setScore(0);
 					PaddleLeft.setScore(0);
 					menu.getShell().setVisible(true);
-
 				}
-
 			}
-
 		};
 		Display.getCurrent().addFilter(SWT.KeyDown, listener);
 

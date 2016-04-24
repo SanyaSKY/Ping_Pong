@@ -40,5 +40,4 @@ public class PaddleRight {
 	public static int getScore() {
 		return score;
 	}
-
 }

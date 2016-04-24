@@ -1,8 +1,7 @@
 package gui;
 
 /*This is the class for the human-controlled paddle
-
-	 */
+ */
 public class PaddleLeft {
 	// declaration for variables needed 
 	private static int yPos = 0 , score ;
