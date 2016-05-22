@@ -7,6 +7,12 @@ import org.eclipse.swt.widgets.*;
 
 import gui.Menu;
 
+/**
+ * This is menu to choose level of hardness
+ * 
+ * @author sanyasky
+ */
+
 public class SkillMenu {
 	private Shell shell;
 	private Shell main_shell;
@@ -14,8 +20,13 @@ public class SkillMenu {
 
 	private Display display;
 
-	private static int gameMode = 0;
-
+	/**
+	 * SkillMenu Constructor
+	 * 
+	 * @param display
+	 * @param main_shell
+	 * @param menu_shell
+	 */
 	public SkillMenu(Display display, Shell main_shell, Shell menu_shell) {
 		this.display = display;
 		this.main_shell = main_shell;
@@ -28,6 +39,7 @@ public class SkillMenu {
 
 	}
 
+	/** show method */
 	public void Show() {
 		Image backgroundImage = new Image(display, Menu.class.getResourceAsStream("ping-pong.jpeg"));
 		Font buttonFont = new Font(shell.getDisplay(), new FontData("Times New Roman", 14, SWT.NORMAL));
@@ -89,6 +101,9 @@ public class SkillMenu {
 		sk_nightmare.setLayoutData(griddatask_nightmare);
 
 		Listener listener = new Listener() {
+			/**
+			 * PushButton handler
+			 */
 			public void handleEvent(Event event) {
 				if (event.widget == sk_baby) {
 					Ball.setSkillLevel(10);
@@ -96,7 +111,6 @@ public class SkillMenu {
 					main_shell.setVisible(true);
 				} else if (event.widget == sk_easy) {
 					Ball.setSkillLevel(8);
-					Menu.setMode(2);
 					shell.setVisible(false);
 					main_shell.setVisible(true);
 				} else if (event.widget == sk_medium) {

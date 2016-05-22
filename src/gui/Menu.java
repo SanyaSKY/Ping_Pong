@@ -5,6 +5,12 @@ import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
+/**
+ * This is the main menu class
+ * 
+ * @author sanyasky
+ */
+
 public class Menu {
 
 	private static Shell shell;
@@ -31,8 +37,8 @@ public class Menu {
 		GridLayout mainlayout = new GridLayout();
 		mainlayout.numColumns = 1;
 		shell.setLayout(mainlayout);
-		mainlayout.marginLeft = 100;
-		mainlayout.marginTop = 90;
+		mainlayout.marginLeft = 105;
+		mainlayout.marginTop = 70;
 		GridData griddataButtonRules = new GridData();
 		griddataButtonRules.horizontalAlignment = GridData.CENTER;
 		griddataButtonRules.heightHint = 35;
@@ -63,11 +69,27 @@ public class Menu {
 		buttonPlayers.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_YELLOW));
 		buttonPlayers.setForeground(shell.getDisplay().getSystemColor(SWT.COLOR_RED));
 		buttonPlayers.setLayoutData(griddataButtonPlayers);
+		GridData griddataButtonReplay = new GridData();
+		griddataButtonReplay.horizontalAlignment = GridData.CENTER;
+		griddataButtonReplay.heightHint = 35;
+		griddataButtonReplay.widthHint = 200;
+		Button buttonReplay = new Button(shell, SWT.PUSH);
+		buttonReplay.setText("Replay");
+		buttonReplay.setFont(buttonFont);
+		buttonReplay.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_WHITE));
+		buttonReplay.setForeground(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
+		buttonReplay.setLayoutData(griddataButtonReplay);
+
 		Listener listener = new Listener() {
+			/**
+			 * PushButton handler
+			 * 
+			 */
 			public void handleEvent(Event event) {
 				if (event.widget == ShowButton) {
 					gameMode = 1;
-					main_shell.setVisible(true);
+					SkillMenu skillmenu = new SkillMenu(display, main_shell, shell);
+					skillmenu.Show();
 					shell.setVisible(false);
 				} else if (event.widget == buttonComputer) {
 					gameMode = 2;
@@ -76,26 +98,62 @@ public class Menu {
 					shell.setVisible(false);
 				} else if (event.widget == buttonPlayers) {
 					gameMode = 3;
-					main_shell.setVisible(true);
+					SkillMenu skillmenu = new SkillMenu(display, main_shell, shell);
+					skillmenu.Show();
+					shell.setVisible(false);
+				} else if (event.widget == buttonReplay) {
+					gameMode = 4;
+					SkillMenu skillmenu = new SkillMenu(display, main_shell, shell);
+					skillmenu.Show();
 					shell.setVisible(false);
 				}
+
 			}
 		};
+		/**
+		 * ShowButton listener
+		 */
 		ShowButton.addListener(SWT.Selection, listener);
+		/**
+		 * buttonComputer listener
+		 */
 		buttonComputer.addListener(SWT.Selection, listener);
+		/**
+		 * buttonPlayers listener
+		 */
 		buttonPlayers.addListener(SWT.Selection, listener);
+		/**
+		 * buttonReplay listener
+		 */
+		buttonReplay.addListener(SWT.Selection, listener);
+
 	}
 
+	/**
+	 * function of getting mode
+	 * 
+	 * @return
+	 */
 	public static int getMode() {
 		return gameMode;
 
 	}
 
+	/**
+	 * function to set game mode
+	 * 
+	 * @param mode
+	 */
 	public static void setMode(int mode) {
 		gameMode = mode;
 	}
 
-	public static Shell getShell() {
+	/**
+	 * function to get main menu shell
+	 * 
+	 * @return
+	 */
+	public Shell getShell() {
 		return shell;
 
 	}

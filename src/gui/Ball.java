@@ -1,13 +1,18 @@
 package gui;
-/* 
- * This is the Ball class
-*/
+
+import java.io.IOException;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
+
+/**
+ * This is the Ball class main() is also situated here
+ * 
+ * @author sanyasky
+ */
 
 public class Ball {
 	private static int IMAGE_WIDTH = 10;
@@ -19,14 +24,37 @@ public class Ball {
 	private static int directionX = 1;
 	private static int directionY = 1;
 
+	/**
+	 * method of setting skill level
+	 * 
+	 * @param skill
+	 */
 	public static void setSkillLevel(int skill) {
 		TIMER_INTERVAL = skill;
 		if (skill == 10)
 			IMAGE_WIDTH = 15;
 		if (skill == 1)
 			IMAGE_WIDTH = 5;
+		if (skill > 1 && skill < 10)
+			IMAGE_WIDTH = 10;
 	}
 
+	/**
+	 * method of setting position of the ball
+	 * 
+	 * @param xPos
+	 * @param yPos
+	 */
+	public static void setPos(int xPos, int yPos) {
+		x = xPos;
+		y = yPos;
+	}
+
+	/**
+	 * animation of ball's movment
+	 * 
+	 * @param canvas
+	 */
 	public static void animate(Canvas canvas) {
 		x += directionX;
 		y += directionY;
@@ -64,7 +92,7 @@ public class Ball {
 
 	public static void main(String[] args) {
 		final Display display = new Display();
-		final Shell shell = new Shell(display);
+		final Shell shell = new Shell(display, SWT.DIALOG_TRIM);
 		shell.setText("Ping_pong");
 		shell.setSize(505, 325);
 
@@ -76,9 +104,11 @@ public class Ball {
 
 		PaddleLeft Paddleleft = new PaddleLeft();
 		PaddleRight Paddleright = new PaddleRight(y);
-		shell.setLayout(new FillLayout());// FillLayout()
+		Replay replay = new Replay();
+		shell.setLayout(new FillLayout());
 		canvas = new Canvas(shell, SWT.NO_BACKGROUND);
 		canvas.addPaintListener(new PaintListener() {
+			/** drawing objects (rockets and ball) */
 			public void paintControl(PaintEvent event) {
 				// Draw the background
 				event.gc.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_BLACK));
@@ -116,6 +146,12 @@ public class Ball {
 					PaddleRight.setScore(0);
 					PaddleLeft.setScore(0);
 					menu.getShell().setVisible(true);
+					try {
+						replay.writeToFile();
+					} catch (IOException event) {
+						event.printStackTrace();
+					}
+
 				}
 			}
 		};
@@ -123,34 +159,59 @@ public class Ball {
 
 		shell.open();
 		shell.setVisible(false);
+		/** Open menu */
 		menu.Show();
 
+		/** Score label */
 		Label label = new Label(shell, SWT.NONE);
 		String str = "Score: " + PaddleLeft.getScore() + ":" + PaddleRight.getScore();
 		label.setText(str);
 		label.setBounds(shell.getClientArea());
 
+		String replayname = "last";
+		/** Open replay file */
+		try {
+			replay.readFromFile(replayname);
+		} catch (ClassNotFoundException | IOException e) {
+			e.printStackTrace();
+		}
+
 		Runnable runnable = new Runnable() {
 			public void run() {
-				if (Menu.getMode() > 0) {
-					animate(canvas);// don't start the game if mode hasn't
-									// selected
+				/** If game mode selected */
+				if (Menu.getMode() > 0) {// don't start the game if mode hasn't
+											// selected
+					if (Menu.getMode() != 4)
+						animate(canvas);
 					String str = "Score: " + PaddleLeft.getScore() + ":" + PaddleRight.getScore();
 					label.setText(str);
+					replay.addState(PaddleLeft.getPos(), PaddleRight.getPos(), x, y, PaddleLeft.getScore(),
+							PaddleRight.getScore());
 				}
+				/** If Show mode */
 				if (Menu.getMode() == 1) {
 					PaddleRight.setPos(y); // bot right(computer's)
 					PaddleLeft.setPos(y); // bot left(player's)
-				} else if (Menu.getMode() == 2)
+				} /** If Single Player mode */
+				else if (Menu.getMode() == 2)
 					PaddleRight.setPos(y); // bot right(computer's)
-				if (PaddleLeft.getScore() == 11 || PaddleRight.getScore() == 11) {
+				/** If score = 11 */
+				if ((PaddleLeft.getScore() == 11 || PaddleRight.getScore() == 11) && (Menu.getMode() > 0)) {
 					shell.setVisible(false);
 					Menu.setMode(0);
 					PaddleRight.setScore(0);
 					PaddleLeft.setScore(0);
 					menu.getShell().setVisible(true);
-				}
+					/** Write replay to the file */
+					try {
+						replay.writeToFile();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 
+				}
+				if (Menu.getMode() == 4)
+					replay.startReplay(canvas);
 				display.timerExec(TIMER_INTERVAL, this);
 			}
 		};
@@ -162,7 +223,7 @@ public class Ball {
 				display.sleep();
 			}
 		}
-		// Kill the timer
+		/** Kill the timer */
 		display.timerExec(-1, runnable);
 		display.dispose();
 
