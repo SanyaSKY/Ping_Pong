@@ -101,10 +101,12 @@ public class Ball {
 		shell.setBackgroundMode(SWT.INHERIT_FORCE);
 		Canvas canvas;
 		Menu menu = new Menu(display, shell);
+		ResultMenu resultmenu = new ResultMenu(display, shell, menu.getShell());
 
 		PaddleLeft Paddleleft = new PaddleLeft();
 		PaddleRight Paddleright = new PaddleRight(y);
 		Replay replay = new Replay();
+		Thread writeFileThread = new Thread(replay);
 		shell.setLayout(new FillLayout());
 		canvas = new Canvas(shell, SWT.NO_BACKGROUND);
 		canvas.addPaintListener(new PaintListener() {
@@ -142,15 +144,14 @@ public class Ball {
 				}
 				if (e.keyCode == esc) {
 					shell.setVisible(false);
+					SkillMenu.getShell().setVisible(false);
+					resultmenu.getShell().dispose();
+					;
 					Menu.setMode(0);
 					PaddleRight.setScore(0);
 					PaddleLeft.setScore(0);
 					menu.getShell().setVisible(true);
-					try {
-						replay.writeToFile();
-					} catch (IOException event) {
-						event.printStackTrace();
-					}
+					writeFileThread.start();
 
 				}
 			}
@@ -196,17 +197,18 @@ public class Ball {
 				else if (Menu.getMode() == 2)
 					PaddleRight.setPos(y); // bot right(computer's)
 				/** If score = 11 */
-				if ((PaddleLeft.getScore() == 11 || PaddleRight.getScore() == 11) && (Menu.getMode() > 0)) {
+				if (PaddleLeft.getScore() == 11 || PaddleRight.getScore() == 11) {
 					shell.setVisible(false);
+					menu.getShell().setVisible(true);
+					resultmenu.Show();
 					Menu.setMode(0);
 					PaddleRight.setScore(0);
 					PaddleLeft.setScore(0);
-					menu.getShell().setVisible(true);
-					/** Write replay to the file */
-					try {
-						replay.writeToFile();
-					} catch (IOException e) {
-						e.printStackTrace();
+					x = 250;
+					y = 150;
+					if (Menu.getMode() != 4) {
+						/** Write replay to the file */
+						writeFileThread.start();
 					}
 
 				}
@@ -217,7 +219,10 @@ public class Ball {
 		};
 
 		display.timerExec(TIMER_INTERVAL, runnable);
-
+		if (menu.getShell().isDisposed()) {
+			SkillMenu.getShell().dispose();
+			shell.dispose();
+		}
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();

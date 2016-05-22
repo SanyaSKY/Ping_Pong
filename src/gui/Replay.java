@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Canvas;
 /**
  * Class represents object, that save and load replay from file
  */
-public class Replay {
+public class Replay implements Runnable {
 	/** List of game states */
 	private List<State> stateList = null;
 	int listIndex = 0;
@@ -41,6 +41,14 @@ public class Replay {
 		objectOutputStream.close();
 		fileOutputStream.flush();
 		fileOutputStream.close();
+	}
+
+	public void run() {
+		try {
+			writeToFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void readFromFile(String replayName) throws IOException, ClassNotFoundException {

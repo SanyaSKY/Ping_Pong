@@ -14,7 +14,7 @@ import gui.Menu;
  */
 
 public class SkillMenu {
-	private Shell shell;
+	private static Shell shell;
 	private Shell main_shell;
 	private Shell menu_shell;
 
@@ -32,7 +32,7 @@ public class SkillMenu {
 		this.main_shell = main_shell;
 		this.menu_shell = menu_shell;
 		menu_shell.setVisible(false);
-		this.shell = new Shell(display);
+		shell = new Shell(display);
 		shell.open();
 		shell.setText("Skill level");
 		shell.setSize(644, 408);
@@ -133,6 +133,11 @@ public class SkillMenu {
 		sk_medium.addListener(SWT.Selection, listener);
 		sk_hard.addListener(SWT.Selection, listener);
 		sk_nightmare.addListener(SWT.Selection, listener);
+
+	}
+
+	public static Shell getShell() {
+		return shell;
 
 	}
 }
